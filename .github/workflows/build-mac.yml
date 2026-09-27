@@ -41,7 +41,5 @@ jobs:
         with:
           name: Ramavtalade-tidsplaner-MAC-v3.3.1
           path: |
-            *.dmg
-            dist/*.dmg
-            installer_output/*.dmg
+  mac_output/*.dmg
           if-no-files-found: error
