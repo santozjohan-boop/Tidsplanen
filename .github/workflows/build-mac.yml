@@ -1,0 +1,47 @@
+name: Build Mac DMG
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-mac:
+    runs-on: macos-latest
+
+    steps:
+      - name: Hamta kallkod
+        uses: actions/checkout@v4
+
+      - name: Installera Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Installera beroenden
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller requests
+
+      - name: Gor byggscript korbart
+        run: chmod +x BYGG_MAC.command
+
+      - name: Bygg Mac-version
+        run: ./BYGG_MAC.command
+
+      - name: Visa skapade filer
+        if: always()
+        run: |
+          echo "Filer efter bygge:"
+          find . -maxdepth 3 -type f | sort
+
+      - name: Ladda upp DMG
+        uses: actions/upload-artifact@v4
+        with:
+          name: Ramavtalade-tidsplaner-MAC-v3.3.1
+          path: |
+            *.dmg
+            dist/*.dmg
+            installer_output/*.dmg
+          if-no-files-found: error
