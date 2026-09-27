@@ -1,0 +1,11 @@
+Ramavtalade tidsplaner v3.2.2 – permanent snabbsökning
+
+Nytt:
+- Sökrutan är alltid synlig i huvudvyn.
+- Live-sökning på projektnamn, adress, ordernr och projektnr.
+- Adress är nu ett eget projektfält i Nytt/Redigera projekt.
+- Ctrl+F fokuserar sökrutan.
+- Esc i sökrutan rensar sökningen.
+- Ingen AI eller nätverksförfrågan används för sökningen.
+
+Ingen ny SQL behövs jämfört med v3.2.1.

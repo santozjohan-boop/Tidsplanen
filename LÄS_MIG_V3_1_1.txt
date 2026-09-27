@@ -1,0 +1,13 @@
+RAMAVTALADE TIDSPLANER v3.1.1 - ADMINSPÄRR
+
+1. Kör först 4_UPPGRADERA_ADMINSPARR_V3_1_1.sql i Supabase SQL Editor.
+   Den är icke-destruktiv och behåller befintliga företag, licenser, användarnycklar och datorer.
+2. Kör BYGG_V3_EXE.cmd.
+3. Starta Licensadmin.exe från dist.
+4. Licensadmin kräver nu antingen:
+   - systemadminnyckeln (full åtkomst till alla företag), eller
+   - en RTP-U-... användarnyckel med rollen Admin (endast det egna företaget).
+5. Projektledare, Användare och Läsare nekas Licensadmin.
+
+Företagsadmin kan administrera företagets OneDrive-inställningar, användarnycklar och datorer.
+Endast systemadmin kan skapa eller spärra hela företagslicenser.

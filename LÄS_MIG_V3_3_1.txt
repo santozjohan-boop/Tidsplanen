@@ -1,0 +1,12 @@
+RAMAVTALADE TIDSPLANER v3.3.1 – FÖRSTA SYSTEMADMIN
+
+Detta paket rättar första-installationsflödet för Licensadmin.
+
+Om Supabase Authentication innehåller exakt EN användare och ingen systemadmin ännu:
+1. Kör 7_SKAPA_FORSTA_SYSTEMADMIN_V3_3_1.sql i Supabase SQL Editor.
+2. Du ska få Success. No rows returned (samt eventuell NOTICE i loggen).
+3. Stäng Licensadmin helt och starta igen.
+4. Logga in med samma e-post/lösenord.
+
+SQL-filen vägrar göra något om en systemadmin redan finns eller om det finns fler/färre än ett Auth-konto.
+Den gamla osäkra/förvirrande bootstrap-knappen med systemadminnyckel visas inte längre i Licensadmin.

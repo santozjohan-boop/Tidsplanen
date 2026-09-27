@@ -1,0 +1,14 @@
+RAMAVTALADE TIDSPLANER v3.3.1 – TVÅ INSTALLATIONSPAKET
+
+Kör BYGG_TVA_SETUP_FILER.cmd på Windows.
+
+Den skapar:
+1. Ramavtalade_tidsplaner_ANVANDARE_Setup_v3.3.1.exe
+   - Installerar endast huvudprogrammet.
+
+2. Ramavtalade_tidsplaner_ADMIN_Setup_v3.3.1.exe
+   - Installerar huvudprogrammet + Administration/Licensadmin.
+
+Filerna hamnar i mappen installer_output.
+
+ADMIN-paketet ger inte automatiskt adminbehörighet. Behörigheten styrs av användarens konto/roll i Supabase.

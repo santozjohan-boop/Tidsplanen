@@ -1,0 +1,26 @@
+RAMAVTALADE TIDSPLANER v3.2.1 – KONTON
+
+1. Kör 6_UPPGRADERA_TILL_V3_2_KONTON.sql EN gång i Supabase SQL Editor.
+2. Kör BYGG_INSTALLATIONSFIL.cmd på Windows.
+3. Färdig installationsfil skapas i installer_output.
+
+FÖRSTA SYSTEMADMIN
+- Starta Licensadmin.
+- Fyll i din e-post och ett lösenord.
+- Klicka "Första systemadmin / migrera gammal admin".
+- Ange den gamla systemadminnyckeln en sista gång.
+- Därefter används e-post + lösenord.
+
+ANVÄNDARE
+- Företagsadmin lägger till användarens e-post under Användare.
+- Användaren startar huvudprogrammet och väljer Skapa konto första gången.
+- Därefter loggar användaren in med e-post + lösenord.
+- Glömt lösenord använder Supabase e-poståterställning.
+
+FÖRETAG
+- Systemadmin kan skapa, spärra/aktivera och ta bort företag.
+- Borttagning kräver att företagsnamnet skrivs exakt samt en slutlig bekräftelse.
+- OneDrive och lokal AI-nyckel fortsätter vara isolerade per företags-ID.
+
+OBS
+Supabase Authentication > Providers > Email måste vara aktiverad. Om Confirm email är aktiverat måste nya användare bekräfta sin e-post innan första inloggningen.

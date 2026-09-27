@@ -1,0 +1,20 @@
+Ramavtalade tidsplaner v3.3.0 – Projektassistent
+
+NYTT
+- AI-assistenten är nu en riktig chatt med sparad historik.
+- Historiken isoleras per företag och inloggad användare.
+- Projektfakta hämtas alltid färskt från aktuell tidsplan.
+- Frågor som ”Vad gör jag idag?”, ”Vad händer nästa vecka?” och följdfrågor använder chattkontext.
+- Ny chatt rensar historiken.
+- AI kan fortfarande skapa projektutkast och föreslå projektändringar.
+- Projektändringar kräver uttrycklig bekräftelse innan de genomförs.
+- Ctrl+Enter skickar chattmeddelandet.
+
+SÄKERHET / DATA
+Chatthistoriken sparas lokalt i användarens AppData, separat per företag och användare. Den synkas inte mellan datorer i denna version. API-nyckeln är fortsatt isolerad per företag enligt tidigare version.
+
+SQL
+Ingen ny SQL krävs för v3.3.0.
+
+TEST
+Pythonkällorna har kompilerats/syntaxkontrollerats i byggpaketet. Grundfunktioner för datum, JSON och chattisolering har körts som automatiska tester. Windows/Tk, Supabase-inloggning, OneDrive och riktiga AI-anrop måste sluttestas på Windows eftersom denna byggmiljö inte är Windows och inte använder dina externa konton.

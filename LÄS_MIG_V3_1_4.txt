@@ -1,0 +1,12 @@
+V3.1.4 – FÖRETAGSSEPARERAD ONEDRIVE
+
+1. Kör 5_UPPGRADERA_WORKSPACE_V3_1_4.sql en gång i Supabase SQL Editor.
+   Den raderar ingen data. Den gör bara att klienten får företagets stabila license_id.
+2. Kör BYGG_V3_EXE.cmd.
+3. Starta nya Ramavtalade tidsplaner.exe från dist.
+
+Ändring:
+- Lokal OneDrive-sökväg sparas nu separat per företagslicens (license_id).
+- Den gamla globala sync-sökvägen ignoreras.
+- Byte till ett annat företag kan därför inte automatiskt återanvända föregående företags lokala datamapp.
+- Om det nya företagets mapp inte hittas måste den anslutas/väljas första gången.

@@ -1,0 +1,15 @@
+RAMAVTALADE TIDSPLANER v3.1.2 - LICENSBYTE
+
+Ingen SQL ska köras för denna version.
+Databasen från v3.1.1 ska lämnas oförändrad.
+
+Ändringar:
+- Om sparad användarnyckel är ogiltig/spärrad visas aktiveringsrutan så att ny nyckel kan anges.
+- Inställningar har permanent knapp "Byt licensnyckel…".
+- Efter lyckat licensbyte startas programmet om och läser in nytt företag, roll och OneDrive-konfiguration.
+
+Gör så här:
+1. Packa upp ZIP-filen.
+2. Kör BYGG_V3_EXE.cmd.
+3. Starta Ramavtalade tidsplaner.exe från dist.
+4. Om gamla nyckeln nekas, ange den nya RTP-U-nyckeln direkt.

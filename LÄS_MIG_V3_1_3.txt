@@ -1,0 +1,16 @@
+RAMAVTALADE TIDSPLANER v3.1.3 – LICENSDIALOG FIX
+
+Ingen SQL ska köras. Databasen ändras inte.
+
+Ändring:
+- Om sparad användarnyckel är ogiltig/spärrad visas först informationen.
+- Efter OK öppnas aktiveringsfönstret synligt ovanpå övriga fönster.
+- Där kan en ny RTP-U-nyckel anges och aktiveras.
+- Inställningar > Byt licensnyckel använder samma dialog.
+
+BYGG:
+1. Packa upp ZIP.
+2. Kör BYGG_V3_EXE.cmd.
+3. Starta Ramavtalade tidsplaner.exe i dist.
+
+Kör INTE någon SQL-fil för denna uppdatering.

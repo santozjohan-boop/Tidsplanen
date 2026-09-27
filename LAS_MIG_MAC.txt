@@ -1,0 +1,28 @@
+RAMAVTALADE TIDSPLANER v3.3.1 – macOS BETA
+
+Detta är Mac-varianten av samma kodbas som Windows-versionen.
+Supabase-konton, företag, roller och projektformat är samma.
+
+BYGG PÅ EN MAC:
+1. Installera Python 3 från python.org om Python 3 saknas.
+2. Packa upp ZIP-filen på Macen.
+3. Högerklicka BYGG_MAC.command > Öppna.
+   Om macOS blockerar filen: öppna Terminal i mappen och kör:
+      chmod +x BYGG_MAC.command
+      ./BYGG_MAC.command
+4. När bygget är klart finns två filer i mac_output:
+   - Ramavtalade_tidsplaner_ANVANDARE_v3.3.1.dmg
+   - Ramavtalade_tidsplaner_ADMIN_v3.3.1.dmg
+
+ADMIN-DMG innehåller både huvudprogrammet och Administration.
+ANVÄNDARE-DMG innehåller bara huvudprogrammet.
+
+ONEDRIVE PÅ MAC:
+Installera Microsoft OneDrive och synka företagets mapp. Programmet söker även under
+~/Library/CloudStorage/ efter OneDrive-mappar. Om mappen inte hittas automatiskt väljer
+användaren den synkade OneDrive-mappen första gången.
+
+BETASÄKERHET:
+DMG/app är inte kodsignerad eller notariserad av Apple i detta paket. Det påverkar inte
+Supabase-behörigheterna, men Gatekeeper kan varna vid första starten. För extern kommersiell
+distribution bör appen signeras med Apple Developer ID och notariseras.

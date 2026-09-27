@@ -1,0 +1,17 @@
+RAMAVTALADE TIDSPLANER v3.1.0
+
+1. Supabase: kör 3_UPPGRADERA_TILL_V3_1.sql EN GÅNG. Den är icke-destruktiv och behåller befintliga licenser/installationer.
+2. Kör BYGG_V3_EXE.cmd.
+3. Starta Licensadmin.exe. Din befintliga adminnyckel gäller fortfarande.
+4. Markera företaget -> Företagsinställningar. Ange admin-e-post, OneDrive-mappens namn, ev. delningslänk samt AI-provider/modell.
+5. Markera företaget -> Användarnycklar -> Skapa användarnyckel. Varje person får sin egen RTP-U-nyckel och roll.
+6. Användaren startar Ramavtalade tidsplaner.exe och anger sin RTP-U-nyckel.
+
+ONEDRIVE
+Licensen styr mappnamnet. Programmet söker automatiskt i lokalt synkade OneDrive-rötter. Microsoft OneDrive måste först ha synkat/delat mappen till Windows. Om den inte hittas får användaren välja den lokala mappen en enda gång.
+
+AI
+Licensen styr provider och modell. API-nyckeln delas INTE ut från licensdatabasen. Det är avsiktligt: en API-nyckel som skickas till alla klientdatorer kan extraheras. I denna v3.1 används fortfarande lokal API-nyckel i Inställningar för själva AI-anropet. För helt central AI-nyckel ska anropen flyttas till en server-side Supabase Edge Function/Vault.
+
+ROLLER
+Admin / Projektledare / Användare / Läsare lagras per användarnyckel. v3.1 skickar rollen till klienten och gör grunden för behörighetsstyrning. Full låsning av varje GUI-kommando per roll kan byggas vidare utan att ändra licensmodellen.

@@ -1,0 +1,11 @@
+Ramavtalade tidsplaner v3.2.1 – DESIGN
+
+Ny modern huvudlayout inspirerad av den godkända designskissen:
+- mörk vänsternavigering
+- ljus arbetsyta och kortbaserad dashboard
+- statistik för aktiva/kommande/projekt som behöver uppmärksamhet/genomsnittlig framdrift
+- moderniserade tabeller, knappar, filter och Gantt-yta
+- befintliga funktioner, Supabase-konton, OneDrive- och AI-isolering behålls
+
+Ingen ny SQL krävs jämfört med v3.2.0.
+Bygg Windows-programmet/installationsfilen med BYGG_INSTALLATIONSFIL.cmd.
