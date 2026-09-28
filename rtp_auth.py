@@ -2,7 +2,7 @@ import json, urllib.request, urllib.error, os, socket, uuid, hashlib, platform
 from pathlib import Path
 SUPABASE_URL='https://ipldltuoqstsplnvuijz.supabase.co'
 SUPABASE_KEY='sb_publishable_ehE_J4RXZP2G6Y-AYyoCIA_87RGGBLj'
-APPDATA=Path(os.getenv('APPDATA',Path.home()))/'Ramavtalade tidsplaner'
+APPDATA=(Path.home()/'Library'/'Application Support'/'Ramavtalade tidsplaner') if platform.system()=='Darwin' else Path(os.getenv('APPDATA',Path.home()))/'Ramavtalade tidsplaner'
 SESSION=APPDATA/'session.json'
 
 def machine_id():

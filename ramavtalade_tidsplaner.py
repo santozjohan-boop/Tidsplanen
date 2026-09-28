@@ -4,11 +4,15 @@ import json, os, sys, uuid, shutil, socket, getpass, zipfile, math, re, threadin
 from pathlib import Path
 from datetime import datetime, date, timedelta
 
-APP_NAME='Ramavtalade tidsplaner'; VERSION='3.3.0'; DATEFMT='%Y-%m-%d'
+APP_NAME='Ramavtalade tidsplaner'; VERSION='3.3.1'; DATEFMT='%Y-%m-%d'
 SUPABASE_URL='https://ipldltuoqstsplnvuijz.supabase.co'
 SUPABASE_KEY='sb_publishable_ehE_J4RXZP2G6Y-AYyoCIA_87RGGBLj'
-APPDATA=Path(os.getenv('APPDATA', Path.home()))/APP_NAME
-LOCAL=Path(os.getenv('LOCALAPPDATA', Path.home()))/APP_NAME
+if sys.platform == 'darwin':
+    APPDATA=Path.home()/'Library'/'Application Support'/APP_NAME
+    LOCAL=Path.home()/'Library'/'Caches'/APP_NAME
+else:
+    APPDATA=Path(os.getenv('APPDATA', Path.home()))/APP_NAME
+    LOCAL=Path(os.getenv('LOCALAPPDATA', Path.home()))/APP_NAME
 CFG=APPDATA/'config.json'; BACKUP=LOCAL/'backup'; LICENSE_FILE=APPDATA/'license.json'
 STATUSES=['Ej startad','Pågår','Pausad','Klar']
 PROJECT_COLOR='#2563eb'
@@ -30,6 +34,17 @@ def time_progress(start_s, end_s, today=None):
 def safe_read(path, default=None):
     try: return json.loads(path.read_text(encoding='utf-8'))
     except: return default
+
+def open_native(path):
+    """Open a file/folder with the platform's default application."""
+    path=str(path)
+    try:
+        if sys.platform == 'darwin': subprocess.Popen(['open', path])
+        elif os.name == 'nt': os.startfile(path)
+        else: subprocess.Popen(['xdg-open', path])
+        return True
+    except Exception:
+        return False
 
 def extract_json(text):
     text=(text or '').strip()
@@ -66,7 +81,7 @@ def account_login(parent=None, force_new=False):
     if parent and str(parent.state())!='withdrawn': dlg.transient(parent)
     dlg.grab_set(); dlg.deiconify(); dlg.lift()
     f=ttk.Frame(dlg,padding=26); f.pack(fill='both',expand=True)
-    ttk.Label(f,text='Ramavtalade tidsplaner',font=('Segoe UI',19,'bold')).pack(anchor='w')
+    ttk.Label(f,text='Ramavtalade tidsplaner',font=(('SF Pro Text' if sys.platform == 'darwin' else 'Segoe UI'),19,'bold')).pack(anchor='w')
     ttk.Label(f,text='Logga in med ditt arbetskonto.',foreground='#64748b').pack(anchor='w',pady=(4,18))
     ttk.Label(f,text='E-post').pack(anchor='w'); email=tk.StringVar(value=rtp_auth.load_session().get('email','')); e=ttk.Entry(f,textvariable=email,width=48); e.pack(fill='x',pady=(3,10))
     ttk.Label(f,text='Lösenord').pack(anchor='w'); pw=tk.StringVar(); pe=ttk.Entry(f,textvariable=pw,show='•'); pe.pack(fill='x',pady=(3,8))
@@ -159,7 +174,7 @@ class App(tk.Tk):
         super().__init__(); self.title(f'{APP_NAME}  •  v{VERSION}'); self.geometry('1580x900'); self.minsize(1180,700)
         # Configure Tk named fonts safely; avoid Tcl parsing of multi-word family strings.
         for _name in ('TkDefaultFont','TkTextFont','TkMenuFont','TkHeadingFont','TkCaptionFont','TkSmallCaptionFont','TkIconFont','TkTooltipFont'):
-            try: tkfont.nametofont(_name).configure(family='Segoe UI', size=9)
+            try: tkfont.nametofont(_name).configure(family=('SF Pro Text' if sys.platform == 'darwin' else 'Segoe UI'), size=9)
             except tk.TclError: pass
         self.cfg=safe_read(CFG,{}) or {}; self.license_profile=_license_state(); self.workspace_id=str(self.license_profile.get('license_id') or '').strip(); self.user=self.license_profile.get('display_name') or self.cfg.get('user') or getpass.getuser()
         # API-nycklar är lokala men strikt isolerade per företags-/workspace-ID.
@@ -183,22 +198,22 @@ class App(tk.Tk):
         except: pass
         self.colors={'nav':'#0f1d31','nav2':'#162a45','bg':'#f4f7fb','card':'#ffffff','text':'#14213d','muted':'#64748b','blue':'#2563eb','line':'#dce5ef','green':'#16a34a','red':'#dc2626'}
         self.configure(bg=self.colors['bg'])
-        self.font_title=tkfont.Font(root=self,family='Segoe UI',size=20,weight='bold')
-        self.font_heading=tkfont.Font(root=self,family='Segoe UI',size=9,weight='bold')
-        self.font_canvas_bold=tkfont.Font(root=self,family='Segoe UI',size=8,weight='bold')
-        self.font_canvas=tkfont.Font(root=self,family='Segoe UI',size=8)
-        self.font_month=tkfont.Font(root=self,family='Segoe UI',size=9,weight='bold')
-        s.configure('.',font=('Segoe UI',9),background=self.colors['bg'],foreground=self.colors['text'])
+        self.font_title=tkfont.Font(root=self,family=('SF Pro Text' if sys.platform == 'darwin' else 'Segoe UI'),size=20,weight='bold')
+        self.font_heading=tkfont.Font(root=self,family=('SF Pro Text' if sys.platform == 'darwin' else 'Segoe UI'),size=9,weight='bold')
+        self.font_canvas_bold=tkfont.Font(root=self,family=('SF Pro Text' if sys.platform == 'darwin' else 'Segoe UI'),size=8,weight='bold')
+        self.font_canvas=tkfont.Font(root=self,family=('SF Pro Text' if sys.platform == 'darwin' else 'Segoe UI'),size=8)
+        self.font_month=tkfont.Font(root=self,family=('SF Pro Text' if sys.platform == 'darwin' else 'Segoe UI'),size=9,weight='bold')
+        s.configure('.',font=(('SF Pro Text' if sys.platform == 'darwin' else 'Segoe UI'),9),background=self.colors['bg'],foreground=self.colors['text'])
         s.configure('Main.TFrame',background=self.colors['bg'])
         s.configure('Card.TFrame',background=self.colors['card'])
         s.configure('Title.TLabel',font=self.font_title,background=self.colors['bg'],foreground=self.colors['text'])
         s.configure('Sub.TLabel',background=self.colors['bg'],foreground=self.colors['muted'])
-        s.configure('CardTitle.TLabel',background=self.colors['card'],foreground=self.colors['muted'],font=('Segoe UI',9))
-        s.configure('CardValue.TLabel',background=self.colors['card'],foreground=self.colors['text'],font=('Segoe UI',18,'bold'))
+        s.configure('CardTitle.TLabel',background=self.colors['card'],foreground=self.colors['muted'],font=(('SF Pro Text' if sys.platform == 'darwin' else 'Segoe UI'),9))
+        s.configure('CardValue.TLabel',background=self.colors['card'],foreground=self.colors['text'],font=(('SF Pro Text' if sys.platform == 'darwin' else 'Segoe UI'),18,'bold'))
         s.configure('Treeview',rowheight=34,background='#ffffff',fieldbackground='#ffffff',foreground=self.colors['text'],borderwidth=0)
         s.configure('Treeview.Heading',font=self.font_heading,background='#f8fafc',foreground='#475569',relief='flat',padding=(6,8))
         s.map('Treeview',background=[('selected','#dbeafe')],foreground=[('selected','#0f172a')])
-        s.configure('Primary.TButton',font=('Segoe UI',9,'bold'),padding=(12,8),background=self.colors['blue'],foreground='white',borderwidth=0)
+        s.configure('Primary.TButton',font=(('SF Pro Text' if sys.platform == 'darwin' else 'Segoe UI'),9,'bold'),padding=(12,8),background=self.colors['blue'],foreground='white',borderwidth=0)
         s.map('Primary.TButton',background=[('active','#1d4ed8')])
         s.configure('Tool.TButton',padding=(9,7),background='#ffffff',foreground=self.colors['text'],borderwidth=1)
         s.map('Tool.TButton',background=[('active','#eef4ff')])
@@ -218,8 +233,13 @@ class App(tk.Tk):
         wanted=(self.license_profile.get('onedrive_folder_name') or 'Ramavtalade tidsplaner').strip()
         if not self.sync or not self.sync.exists():
             roots=[]
-            for k,v in os.environ.items():
-                if k.lower().startswith('onedrive') and v and Path(v).exists(): roots.append(Path(v))
+            if sys.platform == 'darwin':
+                cloud=Path.home()/'Library'/'CloudStorage'
+                if cloud.exists():
+                    roots.extend(x for x in cloud.iterdir() if x.is_dir() and 'onedrive' in x.name.lower())
+            else:
+                for k,v in os.environ.items():
+                    if k.lower().startswith('onedrive') and v and Path(v).exists(): roots.append(Path(v))
             candidates=[]
             for root in roots:
                 candidates += [root/wanted, root/'Shared'/wanted, root/'Delat'/wanted]
@@ -255,12 +275,12 @@ class App(tk.Tk):
         nav=tk.Frame(shell,bg=self.colors['nav'],width=205); nav.pack(side='left',fill='y'); nav.pack_propagate(False)
         main=ttk.Frame(shell,style='Main.TFrame'); main.pack(side='left',fill='both',expand=True)
         brand=tk.Frame(nav,bg=self.colors['nav']); brand.pack(fill='x',padx=18,pady=(22,24))
-        tk.Label(brand,text='◆',bg=self.colors['nav'],fg='#60a5fa',font=('Segoe UI',20,'bold')).pack(side='left')
-        tk.Label(brand,text='Ramavtalade\ntidsplaner',justify='left',bg=self.colors['nav'],fg='white',font=('Segoe UI',11,'bold')).pack(side='left',padx=9)
+        tk.Label(brand,text='◆',bg=self.colors['nav'],fg='#60a5fa',font=(('SF Pro Text' if sys.platform == 'darwin' else 'Segoe UI'),20,'bold')).pack(side='left')
+        tk.Label(brand,text='Ramavtalade\ntidsplaner',justify='left',bg=self.colors['nav'],fg='white',font=(('SF Pro Text' if sys.platform == 'darwin' else 'Segoe UI'),11,'bold')).pack(side='left',padx=9)
         def navbtn(text,cmd,active=False):
             b=tk.Button(nav,text=text,command=cmd,anchor='w',bd=0,relief='flat',cursor='hand2',padx=18,pady=10,
                         bg=('#2563eb' if active else self.colors['nav']),fg='white' if active else '#cbd5e1',
-                        activebackground='#1e40af' if active else self.colors['nav2'],activeforeground='white',font=('Segoe UI',9,'bold' if active else 'normal'))
+                        activebackground='#1e40af' if active else self.colors['nav2'],activeforeground='white',font=(('SF Pro Text' if sys.platform == 'darwin' else 'Segoe UI'),9,'bold' if active else 'normal'))
             b.pack(fill='x',padx=10,pady=2); return b
         navbtn('⌂   Översikt',self.refresh)
         navbtn('▣   Projekt',self.refresh,True)
@@ -270,7 +290,7 @@ class App(tk.Tk):
         navbtn('✦   AI-assistent',self.ai_assistant)
         tk.Frame(nav,bg='#24364f',height=1).pack(fill='x',padx=18,pady=16)
         navbtn('⚙   Inställningar',self.settings)
-        tk.Label(nav,text=f'v{VERSION}',bg=self.colors['nav'],fg='#64748b',font=('Segoe UI',8)).pack(side='bottom',anchor='w',padx=22,pady=18)
+        tk.Label(nav,text=f'v{VERSION}',bg=self.colors['nav'],fg='#64748b',font=(('SF Pro Text' if sys.platform == 'darwin' else 'Segoe UI'),8)).pack(side='bottom',anchor='w',padx=22,pady=18)
 
         head=ttk.Frame(main,style='Main.TFrame',padding=(24,18,24,8)); head.pack(fill='x')
         lefthead=ttk.Frame(head,style='Main.TFrame'); lefthead.pack(side='left')
@@ -615,11 +635,11 @@ class App(tk.Tk):
     def ai_assistant(self):
         win=tk.Toplevel(self); win.title('Projektassistent'); win.geometry('1000x760'); win.transient(self)
         outer=ttk.Frame(win,padding=12); outer.pack(fill='both',expand=True); p,_=self.selected(); provider,key,model=self.ai_settings_values()
-        top=ttk.Frame(outer); top.pack(fill='x'); ttk.Label(top,text='Projektassistent',font=('Segoe UI',16,'bold')).pack(side='left'); ttk.Label(top,text=f'{provider} • {model}',style='Sub.TLabel').pack(side='right')
+        top=ttk.Frame(outer); top.pack(fill='x'); ttk.Label(top,text='Projektassistent',font=(('SF Pro Text' if sys.platform == 'darwin' else 'Segoe UI'),16,'bold')).pack(side='left'); ttk.Label(top,text=f'{provider} • {model}',style='Sub.TLabel').pack(side='right')
         modes=['Chatt','Skapa nytt projekt med AI','Föreslå ändringar i markerat projekt']; mode=tk.StringVar(value=modes[0]); ttk.Combobox(outer,textvariable=mode,values=modes,state='readonly').pack(fill='x',pady=(10,6))
         ttk.Label(outer,text=('Markerat projekt: '+p['name']) if p else 'Chattläge: alla projekt',style='Sub.TLabel').pack(anchor='w',pady=(0,6))
-        out=tk.Text(outer,wrap='word',state='disabled',font=('Segoe UI',10),background='#ffffff',relief='solid',borderwidth=1); out.pack(fill='both',expand=True,pady=(3,8))
-        entry=tk.Text(outer,height=4,wrap='word',font=('Segoe UI',10)); entry.pack(fill='x',pady=(0,8))
+        out=tk.Text(outer,wrap='word',state='disabled',font=(('SF Pro Text' if sys.platform == 'darwin' else 'Segoe UI'),10),background='#ffffff',relief='solid',borderwidth=1); out.pack(fill='both',expand=True,pady=(3,8))
+        entry=tk.Text(outer,height=4,wrap='word',font=(('SF Pro Text' if sys.platform == 'darwin' else 'Segoe UI'),10)); entry.pack(fill='x',pady=(0,8))
         buttons=ttk.Frame(outer); buttons.pack(fill='x'); status=ttk.Label(buttons,text=''); status.pack(side='left')
         apply_btn=ttk.Button(buttons,text='Godkänn förslag',state='disabled'); apply_btn.pack(side='right',padx=4); send_btn=ttk.Button(buttons,text='Skicka',style='Primary.TButton'); send_btn.pack(side='right',padx=4)
         history=self.load_chat(); state={'proposal':None}
@@ -741,10 +761,7 @@ class App(tk.Tk):
         def open_sel(e=None):
             x=selected_path()
             if not x:return
-            try: os.startfile(str(x))
-            except Exception:
-                try: subprocess.Popen(['xdg-open',str(x)])
-                except: pass
+            open_native(x)
         tree.bind('<Double-1>',open_sel)
         bar=ttk.Frame(outer); bar.pack(fill='x')
         ttk.Button(bar,text='Öppna',command=open_sel).pack(side='left',padx=3)
@@ -757,8 +774,7 @@ class App(tk.Tk):
         ttk.Button(bar,text='Lägg till fil…',command=add_file).pack(side='left',padx=3)
         ttk.Button(bar,text='Hämta valda yrkesmallar',command=lambda:(self.sync_project_templates(p),refresh_docs())).pack(side='left',padx=3)
         def open_templates():
-            try: os.startfile(str(self.template_dir))
-            except: pass
+            open_native(self.template_dir)
         ttk.Button(bar,text='Öppna Mallar-mappen',command=open_templates).pack(side='left',padx=3)
         def ai_control():
             x=selected_path()
