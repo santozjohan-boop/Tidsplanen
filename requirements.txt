@@ -1,0 +1,5 @@
+certifi
+pyinstaller>=6.0
+reportlab
+python-docx
+pillow

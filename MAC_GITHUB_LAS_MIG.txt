@@ -1,0 +1,5 @@
+MAC v3.3.1 - ombyggd GitHub-build
+
+SSL är nu explicit kopplat till certifi i både Supabase-inloggningen och AI-anropen. PyInstaller inkluderar certifi och byggscriptet TLS-testar Supabase före paketering.
+
+Ladda upp innehållet i denna ZIP till repots rot (inklusive .github-mappen) och ersätt befintliga filer. Push till main startar bygget automatiskt.

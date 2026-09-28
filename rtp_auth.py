@@ -1,9 +1,11 @@
-import json, urllib.request, urllib.error, os, socket, uuid, hashlib, platform
+import json, urllib.request, urllib.error, os, socket, uuid, hashlib, platform, ssl
+import certifi
 from pathlib import Path
 SUPABASE_URL='https://ipldltuoqstsplnvuijz.supabase.co'
 SUPABASE_KEY='sb_publishable_ehE_J4RXZP2G6Y-AYyoCIA_87RGGBLj'
-APPDATA=(Path.home()/'Library'/'Application Support'/'Ramavtalade tidsplaner') if platform.system()=='Darwin' else Path(os.getenv('APPDATA',Path.home()))/'Ramavtalade tidsplaner'
+APPDATA=Path(os.getenv('APPDATA',Path.home()))/'Ramavtalade tidsplaner'
 SESSION=APPDATA/'session.json'
+SSL_CONTEXT=ssl.create_default_context(cafile=certifi.where())
 
 def machine_id():
     raw='|'.join([platform.system(),platform.machine(),socket.gethostname(),str(uuid.getnode())])
@@ -15,7 +17,7 @@ def _request(path, data=None, token=None, method='POST', timeout=12):
     body=None if data is None else json.dumps(data).encode()
     req=urllib.request.Request(SUPABASE_URL+path,data=body,method=method,headers=headers)
     try:
-        with urllib.request.urlopen(req,timeout=timeout) as r:
+        with urllib.request.urlopen(req,timeout=timeout,context=SSL_CONTEXT) as r:
             b=r.read().decode(); return json.loads(b) if b else {}
     except urllib.error.HTTPError as e:
         b=e.read().decode('utf-8','replace')
