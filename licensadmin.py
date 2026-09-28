@@ -1,4 +1,3 @@
-import sys
 import tkinter as tk
 from tkinter import ttk,messagebox,simpledialog
 import rtp_auth
@@ -9,7 +8,7 @@ class Admin(tk.Tk):
   super().__init__(); self.title('Ramavtalade tidsplaner – Administration v3.3.1'); self.geometry('1080x650'); self.rows={}; self.scope=None; self.profile={}; self.build(); self.withdraw(); self.after(100,self.login)
  def login(self):
   d=tk.Toplevel(self); d.title('Admin – Logga in'); d.geometry('470x330'); d.resizable(False,False); d.grab_set(); f=ttk.Frame(d,padding=24);f.pack(fill='both',expand=True)
-  ttk.Label(f,text='Administration',font=(('SF Pro Text' if sys.platform == 'darwin' else 'Segoe UI'),19,'bold')).pack(anchor='w');ttk.Label(f,text='Logga in med ditt arbetskonto.',foreground='#64748b').pack(anchor='w',pady=(4,16))
+  ttk.Label(f,text='Administration',font=('Segoe UI',19,'bold')).pack(anchor='w');ttk.Label(f,text='Logga in med ditt arbetskonto.',foreground='#64748b').pack(anchor='w',pady=(4,16))
   em=tk.StringVar(value=rtp_auth.load_session().get('email','')); pw=tk.StringVar(); ttk.Label(f,text='E-post').pack(anchor='w');ttk.Entry(f,textvariable=em).pack(fill='x',pady=(3,9));ttk.Label(f,text='Lösenord').pack(anchor='w');pe=ttk.Entry(f,textvariable=pw,show='•');pe.pack(fill='x',pady=(3,9)); st=ttk.Label(f,text='');st.pack(anchor='w')
   def go():
    try:
@@ -30,7 +29,7 @@ class Admin(tk.Tk):
   if not x.get('ok'):raise RuntimeError(x.get('message','Fel'))
   return x
  def build(self):
-  h=ttk.Frame(self,padding=12);h.pack(fill='x');ttk.Label(h,text='Företag & användare',font=(('SF Pro Text' if sys.platform == 'darwin' else 'Segoe UI'),18,'bold')).pack(side='left');ttk.Button(h,text='Logga ut',command=self.logout).pack(side='right',padx=4);ttk.Button(h,text='Uppdatera',command=self.refresh).pack(side='right',padx=4);self.new_btn=ttk.Button(h,text='Nytt företag',command=self.new);self.new_btn.pack(side='right',padx=4)
+  h=ttk.Frame(self,padding=12);h.pack(fill='x');ttk.Label(h,text='Företag & användare',font=('Segoe UI',18,'bold')).pack(side='left');ttk.Button(h,text='Logga ut',command=self.logout).pack(side='right',padx=4);ttk.Button(h,text='Uppdatera',command=self.refresh).pack(side='right',padx=4);self.new_btn=ttk.Button(h,text='Nytt företag',command=self.new);self.new_btn.pack(side='right',padx=4)
   cols=('customer','users','max','expires','status');self.t=ttk.Treeview(self,columns=cols,show='headings');
   for c,n,w in [('customer','Företag',300),('users','Användare',100),('max','Max',70),('expires','Giltig till',130),('status','Status',100)]:self.t.heading(c,text=n);self.t.column(c,width=w)
   self.t.pack(fill='both',expand=True,padx=12)
